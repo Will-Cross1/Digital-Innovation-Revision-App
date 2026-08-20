@@ -1,0 +1,54 @@
+CREATE TABLE Users (
+    ID INTEGER PRIMARY KEY,
+    Username TEXT NOT NULL,
+    Email TEXT UNIQUE NOT NULL,
+    PasswordHash TEXT NOT NULL
+);
+
+CREATE TABLE Subjects (
+    ID INTEGER PRIMARY KEY,
+    Name TEXT UNIQUE NOT NULL,
+    Description TEXT NOT NULL
+);
+
+CREATE TABLE Notes (
+    ID INTEGER PRIMARY KEY,
+    Title TEXT NOT NULL,
+    Content TEXT NOT NULL,
+    User_id INTEGER NOT NULL,
+    Subject_id INTEGER NOT NULL,
+    Created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(User_id) REFERENCES Users(ID) ON DELETE CASCADE,
+    FOREIGN KEY(Subject_id) REFERENCES Subjects(ID)
+);
+
+CREATE TABLE Flashcards (
+    ID INTEGER PRIMARY KEY,
+    Questions_dict TEXT NOT NULL,
+    Answers_dict TEXT NOT NULL,
+    User_id INTEGER NOT NULL,
+    Subject_id INTEGER NOT NULL,
+    Is_public BOOLEAN NOT NULL DEFAULT FALSE,
+    FOREIGN KEY(User_id) REFERENCES Users(ID) ON DELETE CASCADE,
+    FOREIGN KEY(Subject_id) REFERENCES Subjects(ID)
+);
+
+CREATE TABLE Favourites (
+    Flashcard_id INTEGER NOT NULL,
+    User_id INTEGER NOT NULL,
+    PRIMARY KEY (Flashcard_id, User_id),
+    FOREIGN KEY(Flashcard_id) REFERENCES Flashcards(ID) ON DELETE CASCADE,
+    FOREIGN KEY(User_id) REFERENCES Users(ID) ON DELETE CASCADE
+);
+
+CREATE TABLE QuizResults (
+    ID INTEGER PRIMARY KEY,
+    User_id INTEGER NOT NULL,
+    Flashcard_id INTEGER,
+    Score REAL NOT NULL,
+    Total_questions INTEGER NOT NULL,
+    Completed_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(User_id) REFERENCES Users(ID) ON DELETE CASCADE,
+    FOREIGN KEY(Flashcard_id) REFERENCES Flashcards(ID) ON DELETE SET NULL
+);

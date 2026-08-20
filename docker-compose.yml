@@ -1,0 +1,16 @@
+services:
+  #frontend:
+
+  backend:
+    build: ./Backend_tier
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./Data_tier:/data
+    depends_on:
+      - data
+
+  data:
+    build: ./Data_tier
+    volumes:
+      - ./Data_tier:/data
