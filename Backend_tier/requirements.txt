@@ -1,0 +1,5 @@
+psycopg[binary]
+uvicorn
+fastapi
+pwdlib[argon2]
+PyJWT
