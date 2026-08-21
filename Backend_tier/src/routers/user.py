@@ -12,6 +12,7 @@ class UserDetails(BaseModel):
     email: str | None = None
     password: str | None = None
 
+# protected
 @router.get("/")
 def get_user(user_id: int = Depends(get_current_user)):
     conn = connect()
@@ -42,7 +43,7 @@ def get_user(user_id: int = Depends(get_current_user)):
     finally:
         conn.close()
 
-
+# Unprotected
 @router.post("/")
 def add_user(user: UserDetails):
     conn = connect()
@@ -64,6 +65,7 @@ def add_user(user: UserDetails):
     finally:
         conn.close()
 
+# Protected
 @router.patch("/")
 def update_user(user: UserDetails, user_id: int = Depends(get_current_user)):
     conn = connect()
@@ -110,6 +112,7 @@ def update_user(user: UserDetails, user_id: int = Depends(get_current_user)):
     finally:
         conn.close()
 
+# Protected
 @router.delete("/")
 def delete_user(user_id: int = Depends(get_current_user)):
     conn = connect()

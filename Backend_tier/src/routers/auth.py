@@ -17,6 +17,7 @@ class LoginDetails(BaseModel):
     email: str
     password: str
 
+# Unprotected
 @router.post("/login")
 def login(user: LoginDetails):
     conn = connect()
