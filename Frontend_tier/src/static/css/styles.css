@@ -1,0 +1,13 @@
+.nav-link.disabled {
+  pointer-events: none;
+  cursor: default;
+  color: #6c757d;
+}
+
+.navbar-nav {
+    font-size: 22px !important;
+}
+
+.nav-spacing {
+    padding-bottom: 10px;
+}

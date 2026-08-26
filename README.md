@@ -12,7 +12,10 @@ docker compose up -d
 
 
 
-localhost:8000/docs is brilliant for testing
+localhost:8000/docs is brilliant for testing the backend
+
+http://localhost:8080
+runs the frontend (starts at index.html)
 
 
 

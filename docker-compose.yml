@@ -1,5 +1,10 @@
 services:
-  #frontend_tier_container:
+  frontend_tier_container:
+    build: ./Frontend_tier
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend_tier_container
 
   backend_tier_container:
     build: ./Backend_tier
