@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SimpleRevisior</title>
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <!-- bootstrap cos easy for navbar -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+        <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+            <div class="container-fluid nav-spacing">
+                <div class="navbar-header">
+                    <!-- logo made by yours truly -->
+                    <a href="/templates/index.html" class="navbar-brand nav-link"><img src="/static/assets/company_logo.png" alt="Company logo" style="width:140px"></a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a href="/templates/flashcard_search.html">Flashcards</a></li>
+
+                    <li class="logged-in"><a href="/templates/note_search.html" class="nav-link disabled">Notes</a></li>
+                    <li class="logged-in"><a href="/templates/user_info.html">Your Account</a></li>
+                    <li class="logged-in"><a href="/templates/index.html" id="logout">Logout</a></li>
+
+                    <li class="logged-out"><a href="/templates/login.html">Login</a></li>
+                    <li class="logged-out"><a href="/templates/register.html">Register</a></li>
+                </ul>
+            </div>
+        </nav>
+    </head>
+    <body>
+        <main>
+            <h1>Your Notes:</h1>
+            <div id="user_notes">
+                
+            </div>
+
+            <div>
+                Make new note:
+                <input type="text" id="title" placeholder="Note Title">
+                <select id="subject_box">
+                    <option value="">Select subject</option>
+                </select>
+                <button class="submit" onclick="createNote()">New Note</button>
+            </div>
+
+            <div>
+                Make new subject:
+                <input type="text" id="subj_name" placeholder="Subject Name">
+                <input type="text" id="description"  placeholder="Subject Description">
+                <button class="submit" onclick="createSubject()">New Subject</button>
+            </div>
+        </main>
+
+        <script src="/static/js/main.js"></script>
+        <script src="/static/js/notes.js"></script>
+    </body>
+</html>

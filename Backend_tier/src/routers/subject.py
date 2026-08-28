@@ -2,6 +2,10 @@ from fastapi import APIRouter, HTTPException, Depends
 from src.common import connect, get_current_user
 from pydantic import BaseModel
 
+
+# FULLY USED
+
+
 router = APIRouter(
     prefix="/subject",
     tags=["subject"]
@@ -25,8 +29,16 @@ def get_subjects():
                 """
             )
             subjects = cursor.fetchall()
+            
+            subjects_list = []
+            for subject in subjects:
+                subjects_list.append({
+                    "id": subject[0],
+                    "name": subject[1],
+                    "description": subject[2]
+                })
 
-            return subjects
+            return subjects_list
     finally:
         conn.close()
 
@@ -51,8 +63,3 @@ def add_subject(subject: SubjectDetails, user_id: int = Depends(get_current_user
             return "Subject created"
     finally:
         conn.close()
-
-
-# TODO
-# COMPLETED
-# UNTESTED

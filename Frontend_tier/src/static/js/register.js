@@ -18,7 +18,7 @@ async function register() {
     })
     if (response.ok) {
         alert("New user registered");
-        window.location.href = "/templates/index.html";
+        window.location.href = "/templates/login.html";
     } else {
         alert("Error registering user");
     }

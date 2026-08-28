@@ -6,6 +6,10 @@ import jwt
 from pwdlib import PasswordHash
 from datetime import datetime, timedelta, timezone
 
+
+# FULLY USED
+
+
 router = APIRouter(
     prefix="/auth",
     tags=["auth"]

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SimpleRevisior</title>
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <!-- bootstrap cos easy for navbar -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+        <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+            <div class="container-fluid nav-spacing">
+                <div class="navbar-header">
+                    <!-- logo made by yours truly -->
+                    <a href="/templates/index.html" class="navbar-brand nav-link"><img src="/static/assets/company_logo.png" alt="Company logo" style="width:140px"></a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a href="/templates/flashcard_search.html">Flashcards</a></li>
+
+                    <li class="logged-in"><a href="/templates/note_search.html">Notes</a></li>
+                    <li class="logged-in"><a href="/templates/user_info.html">Your Account</a></li>
+                    <li class="logged-in"><a href="/templates/index.html" id="logout">Logout</a></li>
+
+                    <li class="logged-out"><a href="/templates/login.html">Login</a></li>
+                    <li class="logged-out"><a href="/templates/register.html">Register</a></li>
+                </ul>
+            </div>
+        </nav>
+    </head>
+    <body>
+        <main>
+            <h1>Flashcard:</h1>
+
+            <h2 id="title"></h2>
+
+            <select id="subject_box">
+                <option value="">Select subject</option>
+            </select>
+
+            <div id="flashcard"></div>
+
+            <div class="logged-in">
+                <button id="favToggle" onclick="toggleFavourite()">
+                    Favourite: NO
+                </button>
+            </div>
+
+            <div class="logged-in">
+                <button class="submit" id="updateToggle" onclick="toggleUpdating()">
+                    Toggle update mode
+                </button>
+            </div>
+
+            <div class="logged-in">
+                <label>
+                    <input type="checkbox" id="is_public">
+                    Public
+                </label>
+            </div>
+
+            <div class="logged-in">
+                <button class="submit" onclick="takeQuiz()">
+                    Take Quiz
+                </button>
+            </div>
+
+            <div class="logged-in">
+                <h3>Quiz information</h3>
+
+                <div id="quiz_information">
+                    Quiz information goes here
+                </div>
+            </div>
+
+            <div class="logged-in">
+                <button class="submit" onclick="deleteQuizs()">
+                    Delete Quiz Data
+                </button>
+            </div>
+
+            <div class="logged-in">
+                <button class="submit" onclick="deleteFlashcard()">
+                    Delete Flashcard
+                </button>
+            </div>
+        </main>
+
+        <script src="/static/js/main.js"></script>
+        <script src="/static/js/flashcard_open.js"></script>
+    </body>
+</html>

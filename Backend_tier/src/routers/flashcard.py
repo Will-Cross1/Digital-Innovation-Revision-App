@@ -1,6 +1,11 @@
 from fastapi import APIRouter, HTTPException, Depends
 from src.common import connect, get_current_user
 from pydantic import BaseModel
+from psycopg.types.json import Jsonb
+
+
+# FULLY USED
+
 
 router = APIRouter(
     prefix="/flashcard",
@@ -8,6 +13,7 @@ router = APIRouter(
 )
 
 class FlashcardDetails(BaseModel):
+    name: str | None = None
     questions_dict: dict | None = None
     answers_dict: dict | None = None
     subject_id: int | None = None
@@ -22,7 +28,7 @@ def get_flashcard_id_public(flashcard_id: int):
         with conn.cursor() as cursor:
             cursor.execute(
                 """
-                SELECT ID, Questions_dict, Answers_dict, Subject_id, Is_public
+                SELECT ID, Name, Questions_dict, Answers_dict, Subject_id, Is_public
                 FROM Flashcards
                 WHERE ID = %s AND Is_public = True;
                 """,
@@ -38,10 +44,11 @@ def get_flashcard_id_public(flashcard_id: int):
 
             return {
                 "id": flashcard[0],
-                "questions_dict": flashcard[1],
-                "answers_dict": flashcard[2],
-                "subject_id": flashcard[3],
-                "is_public": flashcard[4]
+                "name": flashcard[1],
+                "questions_dict": flashcard[2],
+                "answers_dict": flashcard[3],
+                "subject_id": flashcard[4],
+                "is_public": flashcard[5]
             }
     finally:
         conn.close()
@@ -55,7 +62,7 @@ def get_flashcard_id_private(flashcard_id: int, user_id: int = Depends(get_curre
         with conn.cursor() as cursor:
             cursor.execute(
                 """
-                SELECT ID, Questions_dict, Answers_dict, Subject_id, Is_public
+                SELECT ID, Name, Questions_dict, Answers_dict, Subject_id, Is_public
                 FROM Flashcards
                 WHERE ID = %s AND (User_id = %s OR Is_public = True);
                 """,
@@ -71,10 +78,11 @@ def get_flashcard_id_private(flashcard_id: int, user_id: int = Depends(get_curre
 
             return {
                 "id": flashcard[0],
-                "questions_dict": flashcard[1],
-                "answers_dict": flashcard[2],
-                "subject_id": flashcard[3],
-                "is_public": flashcard[4]
+                "name": flashcard[1],
+                "questions_dict": flashcard[2],
+                "answers_dict": flashcard[3],
+                "subject_id": flashcard[4],
+                "is_public": flashcard[5]
             }
     finally:
         conn.close()
@@ -88,14 +96,25 @@ def get_flashcard_all_public():
         with conn.cursor() as cursor:
             cursor.execute(
                 """
-                SELECT ID, Questions_dict, Answers_dict, Subject_id, Is_public
+                SELECT ID, Name, Questions_dict, Answers_dict, Subject_id, Is_public
                 FROM Flashcards
                 WHERE Is_public = True;
                 """
             )
-            flashcard = cursor.fetchall()
+            flashcards = cursor.fetchall()
+            
+            flashcards_list = []
+            for flashcard in flashcards:
+                flashcards_list.append({
+                    "id": flashcard[0],
+                    "name": flashcard[1],
+                    "questions_dict": flashcard[2],
+                    "answers_dict": flashcard[3],
+                    "subject_id": flashcard[4],
+                    "is_public": flashcard[5]
+                })
 
-            return flashcard
+            return flashcards_list
     finally:
         conn.close()
 
@@ -108,15 +127,26 @@ def get_flashcard_all_private(user_id: int = Depends(get_current_user)):
         with conn.cursor() as cursor:
             cursor.execute(
                 """
-                SELECT ID, Questions_dict, Answers_dict, Subject_id, Is_public
+                SELECT ID, Name, Questions_dict, Answers_dict, Subject_id, Is_public
                 FROM Flashcards
                 WHERE User_id = %s;
                 """,
                 (user_id,)
             )
-            flashcard = cursor.fetchall()
+            flashcards = cursor.fetchall()
+            
+            flashcards_list = []
+            for flashcard in flashcards:
+                flashcards_list.append({
+                    "id": flashcard[0],
+                    "name": flashcard[1],
+                    "questions_dict": flashcard[2],
+                    "answers_dict": flashcard[3],
+                    "subject_id": flashcard[4],
+                    "is_public": flashcard[5]
+                })
 
-            return flashcard
+            return flashcards_list
     finally:
         conn.close()
 
@@ -129,15 +159,16 @@ def add_flashcard(flashcard: FlashcardDetails, user_id: int = Depends(get_curren
         with conn.cursor() as cursor:
             cursor.execute(
                 """
-                INSERT INTO Flashcards (Questions_dict, Answers_dict, User_id, Subject_id, Is_public)
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO Flashcards (Name, Questions_dict, Answers_dict, User_id, Subject_id, Is_public)
+                VALUES (%s, %s, %s, %s, %s, %s)
                 RETURNING ID;
                 """,
-                (flashcard.questions_dict, flashcard.answers_dict, user_id, flashcard.subject_id, flashcard.is_public)
+                (flashcard.name, Jsonb(flashcard.questions_dict), Jsonb(flashcard.answers_dict), user_id, flashcard.subject_id, flashcard.is_public)
             )
+            flashcard_id = cursor.fetchone()[0]
             conn.commit()
 
-            return "Flashcard created"
+            return {"id": flashcard_id}
     finally:
         conn.close()
 
@@ -149,6 +180,17 @@ def update_flashcard(flashcard_id: int, flashcard: FlashcardDetails, user_id: in
     try:
         with conn.cursor() as cursor:
             updates=[]
+            if flashcard.name is not None:
+                cursor.execute(
+                    """
+                    UPDATE Flashcards
+                    SET Name = %s
+                    WHERE ID = %s AND User_id = %s;
+                    """,
+                    (flashcard.name, flashcard_id, user_id)
+                )
+                updates.append("name")
+
             if flashcard.questions_dict is not None:
                 cursor.execute(
                     """
@@ -156,7 +198,7 @@ def update_flashcard(flashcard_id: int, flashcard: FlashcardDetails, user_id: in
                     SET Questions_dict = %s
                     WHERE ID = %s AND User_id = %s;
                     """,
-                    (flashcard.questions_dict, flashcard_id, user_id)
+                    (Jsonb(flashcard.questions_dict), flashcard_id, user_id)
                 )
                 updates.append("questions")
 
@@ -167,7 +209,7 @@ def update_flashcard(flashcard_id: int, flashcard: FlashcardDetails, user_id: in
                     SET Answers_dict = %s
                     WHERE ID = %s AND User_id = %s;
                     """,
-                    (flashcard.answers_dict, flashcard_id, user_id)
+                    (Jsonb(flashcard.answers_dict), flashcard_id, user_id)
                 )
                 updates.append("answers")
 
@@ -229,7 +271,7 @@ def get_flashcard_favourite(user_id: int = Depends(get_current_user)):
         with conn.cursor() as cursor:            
             cursor.execute(
                 """
-                SELECT ID, Questions_dict, Answers_dict, Subject_id, Is_public
+                SELECT ID, Name, Questions_dict, Answers_dict, Subject_id, Is_public
                 FROM Flashcards
                 INNER JOIN Favourites
                 ON Flashcards.ID = Favourites.Flashcard_id
@@ -238,8 +280,19 @@ def get_flashcard_favourite(user_id: int = Depends(get_current_user)):
                 (user_id,)
             )
             flashcards = cursor.fetchall()
+            
+            flashcards_list = []
+            for flashcard in flashcards:
+                flashcards_list.append({
+                    "id": flashcard[0],
+                    "name": flashcard[1],
+                    "questions_dict": flashcard[2],
+                    "answers_dict": flashcard[3],
+                    "subject_id": flashcard[4],
+                    "is_public": flashcard[5]
+                })
 
-            return flashcards
+            return flashcards_list
     finally:
         conn.close()
         
@@ -285,6 +338,43 @@ def favourite_flashcard(flashcard_id: int, user_id: int = Depends(get_current_us
         conn.close()
 
 
-# TODO
-# COMPLETED
-# UNTESTED
+# Protected
+@router.delete("/favourite/{flashcard_id}") # Done
+def delete_favourite_flashcard(flashcard_id: int, user_id: int = Depends(get_current_user)):
+    conn = connect()
+
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                """
+                DELETE FROM Favourites 
+                WHERE Flashcard_id = %s AND User_id = %s;
+                """,
+                (flashcard_id, user_id)
+            )
+
+            conn.commit()
+            return("favourite removed")
+    finally:
+        conn.close()
+
+
+# Protected
+@router.get("/favourite/check/{flashcard_id}") # Done
+def check_is_favourite(flashcard_id: int, user_id: int = Depends(get_current_user)):
+    conn = connect()
+
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT 1 FROM Favourites 
+                WHERE Flashcard_id = %s AND User_id = %s;
+                """,
+                (flashcard_id, user_id)
+            )
+
+            is_favourited = cursor.fetchone()
+            return {"is_favourite": is_favourited is not None}
+    finally:
+        conn.close()

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SimpleRevisior</title>
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <!-- bootstrap cos easy for navbar -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+        <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+            <div class="container-fluid nav-spacing">
+                <div class="navbar-header">
+                    <!-- logo made by yours truly -->
+                    <a href="/templates/index.html" class="navbar-brand nav-link"><img src="/static/assets/company_logo.png" alt="Company logo" style="width:140px"></a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a href="/templates/flashcard_search.html">Flashcards</a></li>
+
+                    <li class="logged-in"><a href="/templates/note_search.html">Notes</a></li>
+                    <li class="logged-in"><a href="/templates/user_info.html">Your Account</a></li>
+                    <li class="logged-in"><a href="/templates/index.html" id="logout">Logout</a></li>
+
+                    <li class="logged-out"><a href="/templates/login.html">Login</a></li>
+                    <li class="logged-out"><a href="/templates/register.html">Register</a></li>
+                </ul>
+            </div>
+        </nav>
+    </head>
+    <body>
+        <main>
+            <h1>Flashcard Quiz:</h1>
+            <div id="flashcard_quiz"></div>
+
+            <button class="submit" onclick="submitQuiz()">Submit Quiz</button>
+
+            <div>
+                <h3>Score: <span id="score_display">0</span></h3>
+            </div>
+
+            <button class="submit" onclick="goBack()">Back</button>
+        </main>
+
+        <script src="/static/js/main.js"></script>
+        <script src="/static/js/quiz.js"></script>
+    </body>
+</html>

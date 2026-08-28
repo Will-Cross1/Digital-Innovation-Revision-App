@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SimpleRevisior</title>
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <!-- bootstrap cos easy for navbar -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+
+        <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+            <div class="container-fluid nav-spacing">
+                <div class="navbar-header">
+                    <!-- logo made by yours truly -->
+                    <a href="/templates/index.html" class="navbar-brand nav-link"><img src="/static/assets/company_logo.png" alt="Company logo" style="width:140px"></a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a href="/templates/flashcard_search.html">Flashcards</a></li>
+
+                    <li class="logged-in"><a href="/templates/note_search.html">Notes</a></li>
+                    <li class="logged-in"><a href="/templates/user_info.html">Your Account</a></li>
+                    <li class="logged-in"><a href="/templates/index.html" id="logout">Logout</a></li>
+
+                    <li class="logged-out"><a href="/templates/login.html">Login</a></li>
+                    <li class="logged-out"><a href="/templates/register.html">Register</a></li>
+                </ul>
+            </div>
+        </nav>
+    </head>
+    <body>
+        <main>
+            <h1>Your Notes</h1>
+            <div>
+                <input type="text" id="title">
+                <p id="created_at"></p>
+                <p id="updated_at"></p>
+                <select id="subject_box">
+                    <option value="">Select subject</option>
+                </select>
+            </div>
+
+            <div class="markdown_box">
+                <textarea id="userNoteInput" placeholder="Notes here"></textarea>
+                <div id="userNoteView" class="markdown_view"></div>
+            </div>
+
+            <div>
+                <button class="submit" onclick="updateNote()">Save note</button>
+                <button class="submit" onclick="viewMarkdown()">View note style</button>
+                <button class="submit" onclick="deleteNote()">Delete note (PERMANENT)</button>
+            </div>
+        </main>
+
+        <script src="/static/js/main.js"></script>
+        <script src="/static/js/note_view.js"></script>
+    </body>
+</html>

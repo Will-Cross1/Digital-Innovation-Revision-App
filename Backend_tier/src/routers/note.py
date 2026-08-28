@@ -2,6 +2,10 @@ from fastapi import APIRouter, HTTPException, Depends
 from src.common import connect, get_current_user
 from pydantic import BaseModel
 
+
+# FULLY USED
+
+
 router = APIRouter(
     prefix="/note",
     tags=["note"]
@@ -49,8 +53,19 @@ def get_note_all(user_id: int = Depends(get_current_user)):
                 (user_id,)
             )
             notes = cursor.fetchall()
+            
+            notes_list = []
+            for note in notes:
+                notes_list.append({
+                    "id": note[0],
+                    "title": note[1],
+                    "content": note[2],
+                    "subject_id": note[3],
+                    "created_at": note[4],
+                    "updated_at": note[5]
+                })
 
-            return notes
+            return notes_list
     finally:
         conn.close()
 
@@ -153,10 +168,3 @@ def delete_note(note_id: int, user_id: int = Depends(get_current_user)):
             return("note deleted")
     finally:
         conn.close()
-
-
-
-
-# TODO
-# COMPLETED
-# UNTESTED

@@ -2,6 +2,10 @@ from fastapi import APIRouter, HTTPException, Depends
 from src.common import connect, get_current_user, hash_password
 from pydantic import BaseModel
 
+
+# FULLY USED
+
+
 router = APIRouter(
     prefix="/user",
     tags=["user"]
