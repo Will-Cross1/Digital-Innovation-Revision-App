@@ -1,2 +1,4 @@
 .env
 app_db_1.db
+__pycache__
+test_venv

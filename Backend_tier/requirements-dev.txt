@@ -1,0 +1,8 @@
+psycopg[binary]
+uvicorn
+fastapi
+pwdlib[argon2]
+PyJWT
+pytest
+pytest-mock
+httpx2

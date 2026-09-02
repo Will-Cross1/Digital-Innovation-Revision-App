@@ -27,4 +27,20 @@ DB_NAME=Jim
 DB_USER=Jim_user
 DB_PASSWORD=very_secure_password
 SECRET_KEY=WHATDOESTHEFOXSAY?!!?!🗣️🗣️🔥🔥🔥
+ALGORITHM=HS256
+```
+
+
+
+To run pytests:
+
+```shell
+cd Backend_tier
+python -m venv test_venv
+source test_venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements-dev.txt
+cd tests
+python -m pytest -v
+
 ```
